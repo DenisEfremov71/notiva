@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Notiva</title>
+  <style>
+    body { font-family: -apple-system, system-ui, sans-serif; background: #f4f4f7; margin: 0; padding: 16px; }
+    .card { max-width: 380px; margin: 48px auto; background: #fff; border-radius: 8px; padding: 24px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.15); }
+    h1 { font-size: 20px; margin: 0 0 12px; }
+    p { line-height: 1.5; color: #333; }
+    input, button { font: inherit; width: 100%; box-sizing: border-box; padding: 10px; margin-top: 8px; }
+    button { background: #673ab7; color: #fff; border: 0; border-radius: 4px; cursor: pointer; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 id="title">One moment…</h1>
+    <p id="message"></p>
+    <form id="reset-form" class="hidden">
+      <input id="new-password" type="password" placeholder="New password" minlength="6" required autocomplete="new-password">
+      <button type="submit">Save password</button>
+    </form>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js';
+    import {
+      getAuth, applyActionCode, checkActionCode, verifyPasswordResetCode, confirmPasswordReset
+    } from 'https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js';
+    // config.js is not committed; see config.example.js.
+    import { firebaseConfig } from './config.js';
+
+    const auth = getAuth(initializeApp(firebaseConfig));
+    const params = new URLSearchParams(location.search);
+    // The apiKey query parameter in the link is deliberately ignored.
+    const mode = params.get('mode');
+    const oobCode = params.get('oobCode');
+
+    const title = document.getElementById('title');
+    const message = document.getElementById('message');
+    const show = (t, m) => { title.textContent = t; message.textContent = m; };
+    const fail = (t, e) => {
+      console.error(e);
+      show(t, 'The link is invalid, expired, or has already been used. Request a new one from the app.');
+    };
+
+    async function handle() {
+      if (!mode || !oobCode) {
+        show('Invalid link', 'This link is missing information. Request a new one from the app.');
+        return;
+      }
+      switch (mode) {
+        case 'verifyEmail':
+          try {
+            await applyActionCode(auth, oobCode);
+            show('Email verified', 'Your email is verified. Return to the app and tap "I\'ve verified my email".');
+          } catch (e) { fail('Try verifying your email again', e); }
+          break;
+
+        case 'resetPassword':
+          try {
+            const email = await verifyPasswordResetCode(auth, oobCode);
+            show('Reset your password', `for ${email}`);
+            const form = document.getElementById('reset-form');
+            form.classList.remove('hidden');
+            form.addEventListener('submit', async (event) => {
+              event.preventDefault();
+              try {
+                await confirmPasswordReset(auth, oobCode, document.getElementById('new-password').value);
+                form.classList.add('hidden');
+                show('Password changed', 'You can now sign in with your new password.');
+              } catch (e) { fail('Try resetting your password again', e); }
+            });
+          } catch (e) { fail('Try resetting your password again', e); }
+          break;
+
+        case 'recoverEmail':
+          try {
+            const info = await checkActionCode(auth, oobCode);
+            await applyActionCode(auth, oobCode);
+            show('Email restored', `Your sign-in email is back to ${info.data.email}. Consider resetting your password.`);
+          } catch (e) { fail('Could not restore your email', e); }
+          break;
+
+        default:
+          show('Invalid link', 'This link is not supported.');
+      }
+    }
+
+    handle();
+  </script>
+</body>
+</html>

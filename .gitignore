@@ -53,3 +53,6 @@ android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 macos/Runner/GoogleService-Info.plist
 firebase.json
+
+# Email action page key (see email_action/config.example.js)
+email_action/config.js
