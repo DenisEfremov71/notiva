@@ -128,20 +128,35 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.blue,
+        foregroundColor: Colors.white,
+        centerTitle: false,
         title: const Text('Verify Email')
       ),
-      body: Column(
-        children: [
-          const Text('Please verify your email address'),
-          TextButton(
-            onPressed: _sendVerification,
-            child: const Text('Send email verification')
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            children: [
+              const Text(
+                'Please verify your email address',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              TextButton(
+                style: TextButton.styleFrom(foregroundColor: Colors.blue),
+                onPressed: _sendVerification,
+                child: const Text('Send email verification')
+              ),
+              TextButton(
+                style: TextButton.styleFrom(foregroundColor: Colors.blue),
+                onPressed: _checkVerified,
+                child: const Text("I've verified my email")
+              )
+            ]
           ),
-          TextButton(
-            onPressed: _checkVerified,
-            child: const Text("I've verified my email")
-          )
-        ]
+        ),
       )
     );
   }
