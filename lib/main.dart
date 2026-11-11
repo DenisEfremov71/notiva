@@ -66,7 +66,8 @@ class _HomePageState extends State<HomePage> {
         builder: (context, asyncSnapshot) {
           switch (asyncSnapshot.connectionState) {
             case ConnectionState.done:
-              return const Text('Done');
+              //return const Text('Done');
+              return const LoginView();
             default:
               return const Text('Loading...');
           }
