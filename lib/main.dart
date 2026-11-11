@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:notiva/firebase_options.dart';
 import 'package:notiva/views/login_view.dart';
+import 'package:notiva/views/notes_view.dart';
 import 'package:notiva/views/register_view.dart';
 import 'package:notiva/views/verify_email_view.dart';
 
@@ -68,15 +69,13 @@ class _HomePageState extends State<HomePage> {
             final user = FirebaseAuth.instance.currentUser;
             if (user != null) {
               if (user.emailVerified) {
-                print('Email is verified');
+                return const NotesView();
               } else {
                 return const VerifyEmailView();
               }
             } else {
               return const LoginView();
-            }
-            return const Text('Done');
-            
+            }            
           default:
             return const CircularProgressIndicator();
         }
