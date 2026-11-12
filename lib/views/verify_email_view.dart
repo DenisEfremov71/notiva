@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:notiva/constants/routes.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const new({super.key});
@@ -42,8 +43,10 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
     debugPrint('After reload: emailVerified=${user?.emailVerified}');
     if (!mounted) return;
     if (user?.emailVerified ?? false) {
-      _showMessage('Email verified!');
-      Navigator.of(context).pop();
+      Navigator.of(context).pushNamedAndRemoveUntil(
+        notesRoute,
+        (_) => false
+      );
     } else {
       _showMessage('Email is not verified yet.');
     }

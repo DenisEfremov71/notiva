@@ -34,31 +34,23 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Created once, so rebuilds don't start Firebase initialization again.
-  late final Future<FirebaseApp> _initialization = Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform
-  );
+  // Created once, so rebuilds don't start initialization again.
+  late final Future<void> _initialization = _init();
 
-  @override
-  void initState() {
-    super.initState();
-    // Navigate from a callback that runs after Firebase is ready,
-    // never from inside build().
-    _initialization.then((_) async {
-      // currentUser is cached on the device; reload() fetches the latest
-      // state (including emailVerified) from Firebase.
+  Future<void> _init() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+    );
+    // currentUser is cached on the device; reload() fetches the latest
+    // state (including emailVerified) from Firebase before build() decides
+    // which screen to show.
+    try {
       await FirebaseAuth.instance.currentUser?.reload();
-      if (!mounted) return;
-      final user = FirebaseAuth.instance.currentUser;
-      debugPrint('Signed in as ${user?.email}, emailVerified=${user?.emailVerified}');
-      if (!(user?.emailVerified ?? false)) {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => const VerifyEmailView()
-          )
-        );
-      }
-    });
+    } on FirebaseAuthException catch (e) {
+      // The account was deleted or disabled: drop the stale session.
+      debugPrint('reload failed: ${e.code}');
+      await FirebaseAuth.instance.signOut();
+    }
   }
 
   @override
