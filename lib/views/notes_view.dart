@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notiva/constants/routes.dart';
+import 'package:notiva/utilities/show_logout_dialog.dart';
 
 enum MenuAction {
   logout
@@ -54,30 +55,4 @@ class _NotesViewState extends State<NotesView> {
       body: const Text('Hello, World!')
     );
   }
-}
-
-Future<bool> showLogOutDialog(BuildContext context) {
-  return showDialog(
-    context: context, 
-    builder:(context) {
-      return AlertDialog(
-        title: const Text('Log Out'),
-        content: const Text('Are you sure you want to log out?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-            child: const Text('Cancel')
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(true);
-            },
-            child: const Text('Log out')
-          )
-        ]
-      );
-    }
-  ).then((value) => value ?? false);
 }
