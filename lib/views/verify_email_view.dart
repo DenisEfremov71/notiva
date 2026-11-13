@@ -37,26 +37,11 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
     }
   }
 
-  Future<void> _checkVerified() async {
-    await FirebaseAuth.instance.currentUser?.reload();
-    final user = FirebaseAuth.instance.currentUser;
-    debugPrint('After reload: emailVerified=${user?.emailVerified}');
-    if (!mounted) return;
-    if (user?.emailVerified ?? false) {
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        notesRoute,
-        (_) => false
-      );
-    } else {
-      _showMessage('Email is not verified yet.');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        //automaticallyImplyLeading: false,
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         centerTitle: false,
@@ -68,18 +53,20 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
           width: double.infinity,
           child: Column(
             children: [
-              const Text(
-                'Please verify your email address',
-                textAlign: TextAlign.center,
-              ),
+              const Text("We've sent you a verification email. Please open it and verify your account by clicking the link."),
+              const Text("If you haven't received the verification email, tap the button below."),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: _sendVerification,
                 child: const Text('Send email verification')
               ),
               TextButton(
-                onPressed: _checkVerified,
-                child: const Text("I've verified my email")
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                  if (!context.mounted) return;
+                  Navigator.of(context).pushNamedAndRemoveUntil(registerRoute, (route) => false);
+                },
+                child: const Text("Restart")
               )
             ]
           ),

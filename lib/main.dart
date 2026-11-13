@@ -7,6 +7,7 @@ import 'package:notiva/views/login_view.dart';
 import 'package:notiva/views/notes_view.dart';
 import 'package:notiva/views/register_view.dart';
 import 'package:notiva/views/verify_email_view.dart';
+import 'dart:developer' as devtools show log;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,8 @@ Future<void> main() async {
       routes : {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
-        notesRoute: (context) => const NotesView()
+        notesRoute: (context) => const NotesView(),
+        verifyEmailRoute: (context) => const VerifyEmailView()
       }
     )
   );
@@ -61,6 +63,7 @@ class _HomePageState extends State<HomePage> {
         switch (asyncSnapshot.connectionState) {
           case ConnectionState.done:
             final user = FirebaseAuth.instance.currentUser;
+            devtools.log(user.toString());
             if (user != null) {
               if (user.emailVerified) {
                 return const NotesView();
