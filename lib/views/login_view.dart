@@ -67,11 +67,23 @@ class _LoginViewState extends State<LoginView> {
                   email: email, 
                   password: password
                 );
-                if (!context.mounted) return;
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  notesRoute,
-                  (_) => false
-                );
+
+                // We need to make sure the user's email has been verified
+                final user = FirebaseAuth.instance.currentUser;
+                if (user?.emailVerified ?? false) {
+                  if (!context.mounted) return;
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    notesRoute,
+                    (_) => false
+                  );
+                } else {
+                  if (!context.mounted) return;
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    verifyEmailRoute,
+                    (_) => false
+                  );
+                }
+
               } on FirebaseAuthException catch (e) {
                 if (e.code == 'invalid-credential') {
                   if (!context.mounted) return;
@@ -101,4 +113,7 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
+}
+
+class FirebasAuth {
 }
