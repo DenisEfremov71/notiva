@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notiva/constants/routes.dart';
+import 'package:notiva/services/auth/auth_exceptions.dart';
+import 'package:notiva/services/auth/auth_service.dart';
 import 'package:notiva/utilities/show_error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -63,14 +64,13 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
       
               try {
-                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                await AuthService.firebase().logIn(
                   email: email, 
                   password: password
                 );
-
                 // We need to make sure the user's email has been verified
-                final user = FirebaseAuth.instance.currentUser;
-                if (user?.emailVerified ?? false) {
+                final user = AuthService.firebase().currentUser;
+                if (user?.isEmailVerified ?? false) {
                   if (!context.mounted) return;
                   Navigator.of(context).pushNamedAndRemoveUntil(
                     notesRoute,
@@ -83,20 +83,18 @@ class _LoginViewState extends State<LoginView> {
                     (_) => false
                   );
                 }
-
-              } on FirebaseAuthException catch (e) {
-                if (e.code == 'invalid-credential') {
-                  if (!context.mounted) return;
-                  await showErrorDialog(context, 'Invalid credential');
-                } else {
-                  if (!context.mounted) return;
-                  await showErrorDialog(context, 'Error: ${e.code}');
-                }
-              } catch (e) {
-                if (!context.mounted) return;
-                await showErrorDialog(context, e.toString());
+              } on InvalidCredentialAuthException catch (_) {
+                await showErrorDialog(
+                  context, 
+                  'Invalid credential'
+                );
+              } on GenericAuthException catch (_) {
+                await showErrorDialog(
+                  context, 
+                  'Authentication error'
+                );
               }
-      
+
             },
             child: Text('Login')
           ),
@@ -113,7 +111,4 @@ class _LoginViewState extends State<LoginView> {
       ),
     );
   }
-}
-
-class FirebasAuth {
 }

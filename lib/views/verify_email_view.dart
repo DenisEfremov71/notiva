@@ -1,6 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notiva/constants/routes.dart';
+import 'package:notiva/services/auth/auth_service.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const new({super.key});
@@ -18,22 +18,12 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
 
   Future<void> _sendVerification() async {
     try {
-
-      final actionCodeSettings = ActionCodeSettings(
-        url: 'https://notiva-flutter.web.app/auth/done',
-        handleCodeInApp: false,
-        iOSBundleId: 'com.denisefremov.notiva',
-        androidPackageName: 'com.denisefremov.notiva',
-        androidInstallApp: false,
-      );
-
-      await FirebaseAuth.instance.currentUser?.sendEmailVerification(actionCodeSettings);
+      await AuthService.firebase().sendEmailVerification();
       if (!mounted) return;
       _showMessage('Verification email sent. Use the link in the newest email.');
-    } on FirebaseAuthException catch (e) {
-      debugPrint('sendEmailVerification failed: ${e.code} ${e.message}');
+    } on Exception {
       if (!mounted) return;
-      _showMessage('Could not send email: ${e.code}');
+      _showMessage('Could not send verification email. Please try again.');
     }
   }
 
@@ -62,9 +52,12 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               ),
               TextButton(
                 onPressed: () async {
-                  await FirebaseAuth.instance.signOut();
+                  await AuthService.firebase().logOut();
                   if (!context.mounted) return;
-                  Navigator.of(context).pushNamedAndRemoveUntil(registerRoute, (route) => false);
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    registerRoute, 
+                    (route) => false
+                  );
                 },
                 child: const Text("Restart")
               )

@@ -1,9 +1,29 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart' show debugPrint;
+import 'package:notiva/firebase_options.dart';
 import 'package:notiva/services/auth/auth_user.dart';
 import 'package:notiva/services/auth/auth_provider.dart';
 import 'package:notiva/services/auth/auth_exceptions.dart';
-import 'package:firebase_auth/firebase_auth.dart' show FirebaseAuth, FirebaseAuthException;
+import 'package:firebase_auth/firebase_auth.dart' show ActionCodeSettings, FirebaseAuth, FirebaseAuthException;
 
 class FirebaseAuthProvider implements AuthProvider {
+
+  @override
+  Future<void> initialize() async {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform
+    );
+    // currentUser is cached on the device; reload() fetches the latest
+    // state (including emailVerified) from Firebase.
+    try {
+      await FirebaseAuth.instance.currentUser?.reload();
+    } on FirebaseAuthException catch (e) {
+      // The account was deleted or disabled: drop the stale session.
+      debugPrint('reload failed: ${e.code}');
+      await FirebaseAuth.instance.signOut();
+    }
+  }
+
   @override
   Future<AuthUser> createUser({
     required String email, 
@@ -85,10 +105,21 @@ class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<void> sendEmailVerification() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await user.sendEmailVerification();
-    } else {
+    if (user == null) {
       throw UserNotLoggedInAuthException();
+    }
+    final actionCodeSettings = ActionCodeSettings(
+      url: 'https://notiva-flutter.web.app/auth/done',
+      handleCodeInApp: false,
+      iOSBundleId: 'com.denisefremov.notiva',
+      androidPackageName: 'com.denisefremov.notiva',
+      androidInstallApp: false,
+    );
+    try {
+      await user.sendEmailVerification(actionCodeSettings);
+    } on FirebaseAuthException catch (e) {
+      debugPrint('sendEmailVerification failed: ${e.code} ${e.message}');
+      throw GenericAuthException();
     }
   }
 

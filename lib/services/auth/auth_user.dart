@@ -7,4 +7,7 @@ class AuthUser {
   const AuthUser(this.isEmailVerified);
 
   factory AuthUser.fromFirebase(User user) => AuthUser(user.emailVerified);
+
+  @override
+  String toString() => 'AuthUser(isEmailVerified: $isEmailVerified)';
 }
