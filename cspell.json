@@ -2,7 +2,12 @@
   "version": "0.2",
   "language": "en",
   "words": [
-    "notiva"
+    "AUTOINCREMENT",
+    "cupertino",
+    "firestore",
+    "notiva",
+    "Schyler",
+    "sqflite"
   ],
   "ignorePaths": [
     "build/**",
