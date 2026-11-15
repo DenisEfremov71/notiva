@@ -1,0 +1,12 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "notiva"
+  ],
+  "ignorePaths": [
+    "build/**",
+    ".dart_tool/**",
+    "pubspec.lock"
+  ]
+}
