@@ -245,9 +245,7 @@ class NotesService {
     await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
 
-    // make sure note exists
-    await getNote(id: note.id);
-
+    // A missing note (or one not owned by note.userId) updates zero rows.
     final updatedCount = await db.update(
       noteTable,
       {textColumn: text, isSyncedWithCloudColumn: 0},

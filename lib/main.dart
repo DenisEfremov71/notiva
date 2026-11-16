@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:notiva/constants/routes.dart';
 import 'package:notiva/services/auth/auth_service.dart';
 import 'package:notiva/views/login_view.dart';
-import 'package:notiva/views/notes_view.dart';
+import 'package:notiva/views/notes/new_note_view.dart';
+import 'package:notiva/views/notes/notes_view.dart';
 import 'package:notiva/views/register_view.dart';
 import 'package:notiva/views/verify_email_view.dart';
 import 'dart:developer' as devtools show log;
@@ -20,7 +21,8 @@ Future<void> main() async {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
         notesRoute: (context) => const NotesView(),
-        verifyEmailRoute: (context) => const VerifyEmailView()
+        verifyEmailRoute: (context) => const VerifyEmailView(),
+        newNoteRoute: (context) => const NewNoteView()
       }
     )
   );

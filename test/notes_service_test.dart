@@ -40,12 +40,18 @@ void main() {
       expect(await service.getOrCreateUser(email: 'foo@bar.com'), user);
     });
 
-    test('Operations fail when the database is closed', () async {
-      final closed = NotesService();
-      expect(
-        () => closed.getUser(email: 'a@b.com'),
+    test('NotesService is a shared instance', () {
+      expect(identical(NotesService(), service), isTrue);
+    });
+
+    test('Closing an already-closed database throws', () async {
+      await service.close();
+      await expectLater(
+        service.close(),
         throwsA(isA<DatabaseIsNotOpenException>()),
       );
+      // Reopen so tearDown has something to close.
+      await service.open(path: inMemoryDatabasePath);
     });
   });
 
