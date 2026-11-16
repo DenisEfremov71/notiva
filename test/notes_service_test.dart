@@ -1,3 +1,4 @@
+import 'package:notiva/services/crud/crud_constants.dart';
 import 'package:notiva/services/crud/crud_exceptions.dart';
 import 'package:notiva/services/crud/notes_service.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
@@ -26,6 +27,17 @@ void main() {
         service.open(path: inMemoryDatabasePath),
         throwsA(isA<DatabaseAlreadyOpenException>()),
       );
+    });
+
+    test('open(email:) creates and loads the user', () async {
+      // Reopen the shared service so tearDown closes this instance.
+      await service.close();
+      service = NotesService();
+      await service.open(path: inMemoryDatabasePath, email: 'Foo@Bar.com');
+
+      final user = await service.getUser(email: 'foo@bar.com');
+      expect(user.email, 'foo@bar.com');
+      expect(await service.getOrCreateUser(email: 'foo@bar.com'), user);
     });
 
     test('Operations fail when the database is closed', () async {
