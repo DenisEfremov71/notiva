@@ -9,9 +9,15 @@ import 'package:notiva/services/crud/crud_exceptions.dart';
 class NotesService {
 
   Database? _db;
-  DatabaseUser? _currentUser;
   List<DatabaseNote> _notes = [];
+
+  static final NotesService _shared = NotesService._sharedInstance();
+  NotesService._sharedInstance();
+  factory NotesService() => _shared;
+  
   final _notesStreamController = StreamController<List<DatabaseNote>>.broadcast();
+
+  Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
 
   Future<void> _cacheNotes({required DatabaseUser owner}) async {
     final allNotes = await getAllNotes(owner: owner);
@@ -77,7 +83,6 @@ class NotesService {
   Future<void> close() async {
     final db = _getDatabaseOrThrow();
     _db = null;
-    _currentUser = null;
     _notes = [];
     _notesStreamController.add(const []);
     await db.close();
@@ -86,6 +91,7 @@ class NotesService {
   // users
 
   Future<DatabaseUser> getUser({required String email}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final results = await db.query(
       userTable,
@@ -102,6 +108,7 @@ class NotesService {
   }
 
   Future<DatabaseUser> createUser({required String email}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final normalizedEmail = email.toLowerCase();
 
@@ -133,13 +140,13 @@ class NotesService {
     } catch (e) {
       rethrow;
     }
-    _currentUser = user;
     await _cacheNotes(owner: user);
     return user;
   }
 
   /// Deletes the user and, via `ON DELETE CASCADE`, all of their notes.
   Future<void> deleteUser({required String email}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final deletedCount = await db.delete(
       userTable,
@@ -155,6 +162,7 @@ class NotesService {
   // notes
 
   Future<DatabaseNote> createNote({required DatabaseUser owner}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
 
     // make sure owner exists in the database with the correct id
@@ -184,6 +192,7 @@ class NotesService {
   }
 
   Future<DatabaseNote> getNote({required int id}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final notes = await db.query(
       noteTable,
@@ -204,6 +213,7 @@ class NotesService {
   }
 
   Future<List<DatabaseNote>> getAllNotes({required DatabaseUser owner}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final notes = await db.query(
       noteTable,
@@ -217,6 +227,7 @@ class NotesService {
   Future<List<DatabaseNote>> getUnsyncedNotes({
     required DatabaseUser owner,
   }) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final notes = await db.query(
       noteTable,
@@ -231,6 +242,7 @@ class NotesService {
     required DatabaseNote note,
     required String text,
   }) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
 
     // make sure note exists
@@ -255,6 +267,7 @@ class NotesService {
   }
 
   Future<void> markNoteSynced({required int id}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final updatedCount = await db.update(
       noteTable,
@@ -269,6 +282,7 @@ class NotesService {
   }
 
   Future<void> deleteNote({required int id}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final deletedCount = await db.delete(
       noteTable,
@@ -285,6 +299,7 @@ class NotesService {
   }
 
   Future<int> deleteAllNotes({required DatabaseUser owner}) async {
+    await _ensureDbIsOpen();
     final db = _getDatabaseOrThrow();
     final numberOfDeletions = await db.delete(
       noteTable,
