@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:notiva/constants/routes.dart';
 import 'package:notiva/services/auth/auth_service.dart';
 import 'package:notiva/views/login_view.dart';
-import 'package:notiva/views/notes/new_note_view.dart';
+import 'package:notiva/views/notes/create_update_note_view.dart';
 import 'package:notiva/views/notes/notes_view.dart';
 import 'package:notiva/views/register_view.dart';
 import 'package:notiva/views/verify_email_view.dart';
+
 import 'dart:developer' as devtools show log;
 
 Future<void> main() async {
@@ -13,18 +14,16 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.blue)
-      ),
+      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.blue)),
       home: const HomePage(),
-      routes : {
+      routes: {
         loginRoute: (context) => const LoginView(),
         registerRoute: (context) => const RegisterView(),
         notesRoute: (context) => const NotesView(),
         verifyEmailRoute: (context) => const VerifyEmailView(),
-        newNoteRoute: (context) => const NewNoteView()
-      }
-    )
+        createOrUpdateNoteRoute: (context) => const CreateUpdateNoteView(),
+      },
+    ),
   );
 }
 
@@ -43,24 +42,28 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _initialization,
-      builder: (context, asyncSnapshot) {
-        switch (asyncSnapshot.connectionState) {
-          case ConnectionState.done:
-            final user = AuthService.firebase().currentUser;
-            devtools.log(user.toString());
-            if (user != null) {
-              if (user.isEmailVerified) {
-                return const NotesView();
-              } else {
-                return const VerifyEmailView();
-              }
-            } else {
-              return const LoginView();
+      builder:
+          (
+            context,
+            asyncSnapshot,
+          ) {
+            switch (asyncSnapshot.connectionState) {
+              case ConnectionState.done:
+                final user = AuthService.firebase().currentUser;
+                devtools.log(user.toString());
+                if (user != null) {
+                  if (user.isEmailVerified) {
+                    return const NotesView();
+                  } else {
+                    return const VerifyEmailView();
+                  }
+                } else {
+                  return const LoginView();
+                }
+              default:
+                return const CircularProgressIndicator();
             }
-          default:
-            return const CircularProgressIndicator();
-        }
-      }
+          },
     );
   }
 }
