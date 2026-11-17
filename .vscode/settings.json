@@ -1,0 +1,14 @@
+{
+  "[dart]": {
+    "editor.formatOnSave": true
+  },
+  "emeraldwalk.runonsave": {
+    "commands": [
+      {
+        "match": "\\.dart$",
+        "isAsync": true,
+        "cmd": "\"${workspaceFolder}/tool/format_parameters.sh\" \"${file}\""
+      }
+    ]
+  }
+}

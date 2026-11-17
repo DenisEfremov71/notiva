@@ -9,6 +9,15 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+formatter:
+  # Allow lines up to 120 characters before the formatter wraps them (default
+  # is 80), so short expressions such as `final x = a as B;` stay on one line.
+  page_width: 120
+  # Keep trailing commas so that lists ending with one stay split one item per
+  # line. tool/format_parameters.dart adds a trailing comma to every parameter
+  # list with more than one parameter (run on save, see .vscode/settings.json).
+  trailing_commas: preserve
+
 analyzer:
   exclude:
     - build/**
