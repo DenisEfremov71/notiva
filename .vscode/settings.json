@@ -2,6 +2,11 @@
   "[dart]": {
     "editor.formatOnSave": true
   },
+  // Flutter's Swift Package Manager integration copies full plugin sources (including their
+  // android/ Gradle projects) here. Hide them so Gradle for Java doesn't try to import them.
+  "files.exclude": {
+    "build/*/SourcePackages": true
+  },
   "emeraldwalk.runonsave": {
     "commands": [
       {

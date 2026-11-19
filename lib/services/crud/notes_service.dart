@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:notiva/services/crud/crud_constants.dart';
 import 'package:sqflite/sqflite.dart';
@@ -7,7 +8,6 @@ import 'package:path/path.dart' show join;
 import 'package:notiva/services/crud/crud_exceptions.dart';
 
 class NotesService {
-
   Database? _db;
   List<DatabaseNote> _notes = [];
 
@@ -16,11 +16,11 @@ class NotesService {
     _notesStreamController = StreamController<List<DatabaseNote>>.broadcast(
       onListen: () {
         _notesStreamController.sink.add(_notes);
-      }
+      },
     );
   }
   factory NotesService() => _shared;
-  
+
   late final StreamController<List<DatabaseNote>> _notesStreamController;
 
   Stream<List<DatabaseNote>> get allNotes => _notesStreamController.stream;
@@ -47,22 +47,28 @@ class NotesService {
   /// If [email] is given, the matching user is loaded (created on first
   /// login) and their notes are cached. If that fails, the database is
   /// closed again and the error is rethrown.
-  Future<void> open({String? path, String? email}) async {
+  Future<void> open({
+    String? path,
+    String? email,
+  }) async {
     if (_db != null) {
       throw DatabaseAlreadyOpenException();
     }
 
     try {
-      final dbPath =
-          path ?? join((await getApplicationDocumentsDirectory()).path, dbName);
+      final dbPath = path ?? join((await getApplicationDocumentsDirectory()).path, dbName);
       _db = await openDatabase(
         dbPath,
         version: dbVersion,
         onConfigure: (db) => db.execute('PRAGMA foreign_keys = ON'),
-        onCreate: (db, version) async {
-          await db.execute(createUserTableSQL);
-          await db.execute(createNoteTableSQL);
-        },
+        onCreate:
+            (
+              db,
+              version,
+            ) async {
+              await db.execute(createUserTableSQL);
+              await db.execute(createNoteTableSQL);
+            },
       );
     } on MissingPlatformDirectoryException {
       throw UnableToGetDocumentsDirectoryException();
@@ -323,11 +329,12 @@ class DatabaseUser {
   final int id;
   final String email;
 
-  const DatabaseUser({required this.id, required this.email});
+  const DatabaseUser({
+    required this.id,
+    required this.email,
+  });
 
-  DatabaseUser.fromRow(Map<String, Object?> map)
-    : id = map[idColumn] as int,
-      email = map[emailColumn] as String;
+  DatabaseUser.fromRow(Map<String, Object?> map) : id = map[idColumn] as int, email = map[emailColumn] as String;
 
   @override
   String toString() => 'User, ID = $id, email = $email';
@@ -360,8 +367,7 @@ class DatabaseNote {
       isSyncedWithCloud = (map[isSyncedWithCloudColumn] as int) == 1;
 
   @override
-  String toString() =>
-      'Note, ID = $id, userId = $userId, isSyncedWithCloud = $isSyncedWithCloud, text = $text';
+  String toString() => 'Note, ID = $id, userId = $userId, isSyncedWithCloud = $isSyncedWithCloud, text = $text';
 
   @override
   bool operator ==(covariant DatabaseNote other) => id == other.id;
