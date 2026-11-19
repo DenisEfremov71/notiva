@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:notiva/constants/routes.dart';
 import 'package:notiva/enums/menu_action.dart';
 import 'package:notiva/services/auth/auth_service.dart';

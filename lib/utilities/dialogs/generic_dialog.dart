@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 typedef DialogOptionBuilder<T> = Map<String, T?> Function();
 
@@ -6,7 +6,7 @@ Future<T?> showGenericDialog<T>({
   required BuildContext context,
   required String title,
   required String content,
-  required DialogOptionBuilder<T> optionsBuilder
+  required DialogOptionBuilder<T> optionsBuilder,
 }) {
   final options = optionsBuilder();
   return showDialog<T>(
@@ -21,10 +21,10 @@ Future<T?> showGenericDialog<T>({
             onPressed: () {
               Navigator.of(context).pop(value);
             },
-            child: Text(optionTitle)
+            child: Text(optionTitle),
           );
-        }).toList()
+        }).toList(),
       );
-    }
+    },
   );
 }

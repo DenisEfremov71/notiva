@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:notiva/constants/routes.dart';
 import 'package:notiva/services/auth/auth_exceptions.dart';
 import 'package:notiva/services/auth/auth_service.dart';
@@ -81,8 +81,7 @@ class _RegisterViewState extends State<RegisterView> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil(loginRoute, (route) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil(loginRoute, (route) => false);
             },
             child: const Text('Already registered? Login here.'),
           ),

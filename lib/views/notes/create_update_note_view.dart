@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:notiva/services/auth/auth_service.dart';
 import 'package:notiva/utilities/dialogs/cannot_share_empty_note_dialog.dart';
 import 'package:notiva/utilities/generics/get_arguments.dart';

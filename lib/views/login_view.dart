@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:notiva/constants/routes.dart';
 import 'package:notiva/services/auth/auth_exceptions.dart';
 import 'package:notiva/services/auth/auth_service.dart';
@@ -68,12 +68,10 @@ class _LoginViewState extends State<LoginView> {
                 final user = AuthService.firebase().currentUser;
                 if (user?.isEmailVerified ?? false) {
                   if (!context.mounted) return;
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(notesRoute, (_) => false);
+                  Navigator.of(context).pushNamedAndRemoveUntil(notesRoute, (_) => false);
                 } else {
                   if (!context.mounted) return;
-                  Navigator.of(context)
-                      .pushNamedAndRemoveUntil(verifyEmailRoute, (_) => false);
+                  Navigator.of(context).pushNamedAndRemoveUntil(verifyEmailRoute, (_) => false);
                 }
               } on InvalidCredentialAuthException catch (_) {
                 await showErrorDialog(context, 'Invalid credential');
@@ -85,8 +83,7 @@ class _LoginViewState extends State<LoginView> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.of(context)
-                  .pushNamedAndRemoveUntil(registerRoute, (_) => false);
+              Navigator.of(context).pushNamedAndRemoveUntil(registerRoute, (_) => false);
             },
             child: Text('Not registered yet? Register here.'),
           ),

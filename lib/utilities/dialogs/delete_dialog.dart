@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:notiva/utilities/dialogs/generic_dialog.dart';
 
 Future<bool> showDeleteDialog(BuildContext context) {

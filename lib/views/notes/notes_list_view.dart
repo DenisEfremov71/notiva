@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:notiva/services/cloud/cloud_note.dart';
 import 'package:notiva/utilities/dialogs/delete_dialog.dart';
 
