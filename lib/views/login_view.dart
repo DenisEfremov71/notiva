@@ -1,7 +1,9 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:notiva/constants/routes.dart';
 import 'package:notiva/services/auth/auth_exceptions.dart';
-import 'package:notiva/services/auth/auth_service.dart';
+import 'package:notiva/services/auth/bloc/auth_bloc.dart';
+import 'package:notiva/services/auth/bloc/auth_event.dart';
 import 'package:notiva/utilities/dialogs/error_dialog.dart';
 
 class LoginView extends StatefulWidget {
@@ -60,19 +62,12 @@ class _LoginViewState extends State<LoginView> {
               final password = _password.text;
 
               try {
-                await AuthService.firebase().logIn(
-                  email: email,
-                  password: password,
+                context.read<AuthBloc>().add(
+                  AuthEventLogIn(
+                    email,
+                    password,
+                  ),
                 );
-                // We need to make sure the user's email has been verified
-                final user = AuthService.firebase().currentUser;
-                if (user?.isEmailVerified ?? false) {
-                  if (!context.mounted) return;
-                  Navigator.of(context).pushNamedAndRemoveUntil(notesRoute, (_) => false);
-                } else {
-                  if (!context.mounted) return;
-                  Navigator.of(context).pushNamedAndRemoveUntil(verifyEmailRoute, (_) => false);
-                }
               } on InvalidCredentialAuthException catch (_) {
                 await showErrorDialog(context, 'Invalid credential');
               } on GenericAuthException catch (_) {
