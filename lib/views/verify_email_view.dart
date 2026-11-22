@@ -1,6 +1,7 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:notiva/constants/routes.dart';
-import 'package:notiva/services/auth/auth_service.dart';
+import 'package:notiva/services/auth/bloc/auth_bloc.dart';
+import 'package:notiva/services/auth/bloc/auth_event.dart';
 
 class VerifyEmailView extends StatefulWidget {
   const new({super.key});
@@ -10,21 +11,6 @@ class VerifyEmailView extends StatefulWidget {
 }
 
 class _VerifyEmailViewState extends State<VerifyEmailView> {
-  void _showMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-  }
-
-  Future<void> _sendVerification() async {
-    try {
-      await AuthService.firebase().sendEmailVerification();
-      if (!mounted) return;
-      _showMessage('Verification email sent. Use the link in the newest email.');
-    } on Exception {
-      if (!mounted) return;
-      _showMessage('Could not send verification email. Please try again.');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,12 +32,19 @@ class _VerifyEmailViewState extends State<VerifyEmailView> {
               ),
               const Text("If you haven't received the verification email, tap the button below."),
               const SizedBox(height: 8),
-              TextButton(onPressed: _sendVerification, child: const Text('Send email verification')),
               TextButton(
-                onPressed: () async {
-                  await AuthService.firebase().logOut();
-                  if (!context.mounted) return;
-                  Navigator.of(context).pushNamedAndRemoveUntil(registerRoute, (route) => false);
+                onPressed: () {
+                  context.read<AuthBloc>().add(
+                    const AuthEventSendEmailVerification(),
+                  );
+                },
+                child: const Text('Send email verification'),
+              ),
+              TextButton(
+                onPressed: () {
+                  context.read<AuthBloc>().add(
+                    const AuthEventLogOut(),
+                  );
                 },
                 child: const Text("Restart"),
               ),
