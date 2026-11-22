@@ -7,12 +7,9 @@ import 'package:notiva/services/auth/auth_exceptions.dart';
 import 'package:firebase_auth/firebase_auth.dart' show ActionCodeSettings, FirebaseAuth, FirebaseAuthException;
 
 class FirebaseAuthProvider implements AuthProvider {
-
   @override
   Future<void> initialize() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform
-    );
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     // currentUser is cached on the device; reload() fetches the latest
     // state (including emailVerified) from Firebase.
     try {
@@ -26,14 +23,11 @@ class FirebaseAuthProvider implements AuthProvider {
 
   @override
   Future<AuthUser> createUser({
-    required String email, 
-    required String password
+    required String email,
+    required String password,
   }) async {
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: email, 
-        password: password
-      );
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
       if (user != null) {
         return user;
@@ -48,7 +42,7 @@ class FirebaseAuthProvider implements AuthProvider {
       } else if (e.code == 'invalid-email') {
         throw InvalidEmailAuthException();
       } else {
-       throw GenericAuthException();
+        throw GenericAuthException();
       }
     } catch (_) {
       throw GenericAuthException();
@@ -67,14 +61,11 @@ class FirebaseAuthProvider implements AuthProvider {
 
   @override
   Future<AuthUser> logIn({
-    required String email, 
-    required String password
+    required String email,
+    required String password,
   }) async {
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: email, 
-        password: password
-      );
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
       if (user != null) {
         return user;
@@ -122,5 +113,4 @@ class FirebaseAuthProvider implements AuthProvider {
       throw GenericAuthException();
     }
   }
-
 }
