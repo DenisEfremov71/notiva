@@ -56,7 +56,7 @@ class _LoginViewState extends State<LoginView> {
 
               if (state.exception is InvalidCredentialAuthException) {
                 await showErrorDialog(context, 'Wrong credentials');
-              } else {
+              } else if (state.exception is GenericAuthException) {
                 await showErrorDialog(context, 'Authentication error');
               }
             }
