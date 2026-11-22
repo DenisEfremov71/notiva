@@ -5,7 +5,6 @@ import 'package:notiva/services/auth/bloc/auth_bloc.dart';
 import 'package:notiva/services/auth/bloc/auth_event.dart';
 import 'package:notiva/services/auth/bloc/auth_state.dart';
 import 'package:notiva/utilities/dialogs/error_dialog.dart';
-import 'package:notiva/utilities/dialogs/loading_dialog.dart';
 
 class LoginView extends StatefulWidget {
   const new({super.key});
