@@ -52,6 +52,28 @@ void main() {
       final user = provider.currentUser;
       expect(user, isNotNull);
     });
+
+    test('Password reset should fail for an invalid email', () async {
+      await expectLater(
+        provider.sendPasswordReset(toEmail: 'not-an-email'),
+        throwsA(const TypeMatcher<InvalidEmailAuthException>()),
+      );
+    });
+
+    test('Password reset should succeed for a valid email', () async {
+      await expectLater(
+        provider.sendPasswordReset(toEmail: 'testuser@example.com'),
+        completes,
+      );
+    });
+  });
+
+  test('Cannot send password reset if not initialized', () async {
+    final uninitializedProvider = MockAuthProvider();
+    await expectLater(
+      uninitializedProvider.sendPasswordReset(toEmail: 'testuser@example.com'),
+      throwsA(const TypeMatcher<NotInitializedException>()),
+    );
   });
 }
 
@@ -119,5 +141,12 @@ class MockAuthProvider implements AuthProvider {
       isEmailVerified: true,
     );
     _user = newUser;
+  }
+
+  @override
+  Future<void> sendPasswordReset({required String toEmail}) async {
+    if (!isInitialized) throw NotInitializedException();
+    if (!toEmail.contains('@')) throw InvalidEmailAuthException();
+    await Future.delayed(const Duration(milliseconds: 100));
   }
 }
