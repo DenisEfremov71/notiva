@@ -18,6 +18,7 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       title: 'Notiva',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.blue)),
       home: BlocProvider<AuthBloc>(
         create: (context) => AuthBloc(FirebaseAuthProvider()),
