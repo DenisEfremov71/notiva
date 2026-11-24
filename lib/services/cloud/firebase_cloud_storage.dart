@@ -46,10 +46,12 @@ class FirebaseCloudStorage {
     }
   }
 
-  Stream<Iterable<CloudNote>> allNotes({required String ownerUserId}) => notes.snapshots().map(
-    (snapshot) =>
-        snapshot.docs.map((doc) => CloudNote.fromSnapshot(doc)).where((note) => note.ownerUserId == ownerUserId),
-  );
+  // Filter in Firestore, not on the device: the security rules only allow
+  // reading your own notes, so an unfiltered query would be rejected.
+  Stream<Iterable<CloudNote>> allNotes({required String ownerUserId}) => notes
+      .where(ownerUserIdFieldName, isEqualTo: ownerUserId)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map((doc) => CloudNote.fromSnapshot(doc)));
 
   Future<Iterable<CloudNote>> getNotes({required String ownerUserId}) async {
     try {
