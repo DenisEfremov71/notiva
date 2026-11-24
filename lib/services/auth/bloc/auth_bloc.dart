@@ -2,9 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:notiva/services/auth/auth_provider.dart';
 import 'package:notiva/services/auth/bloc/auth_event.dart';
 import 'package:notiva/services/auth/bloc/auth_state.dart';
+import 'package:notiva/services/cloud/firebase_cloud_storage.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc(AuthProvider provider) : super(const AuthStateUninitialized(isLoading: true)) {
+  AuthBloc(
+    AuthProvider provider,
+    FirebaseCloudStorage storage,
+  ) : super(const AuthStateUninitialized(isLoading: true)) {
     // initialize
     on<AuthEventInitialize>((
       event,
@@ -192,6 +196,51 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           AuthStateLoggedOut(
             exception: e,
             isLoading: false,
+          ),
+        );
+      }
+    });
+
+    // delete account
+    on<AuthEventDeleteAccount>((
+      event,
+      emit,
+    ) async {
+      final user = provider.currentUser;
+      if (user == null) {
+        emit(
+          const AuthStateLoggedOut(
+            exception: null,
+            isLoading: false,
+          ),
+        );
+        return;
+      }
+      emit(
+        AuthStateLoggedIn(
+          user: user,
+          isLoading: true,
+          loadingText: 'Deleting your account...',
+        ),
+      );
+      try {
+        // Re-authenticate first so nothing is deleted if the password is wrong.
+        await provider.reauthenticate(password: event.password);
+        // Notes must go before the user: signed-out users can't delete them.
+        await storage.deleteAllNotes(ownerUserId: user.id);
+        await provider.deleteAccount();
+        emit(
+          const AuthStateLoggedOut(
+            exception: null,
+            isLoading: false,
+          ),
+        );
+      } on Exception catch (e) {
+        emit(
+          AuthStateLoggedIn(
+            user: user,
+            isLoading: false,
+            exception: e,
           ),
         );
       }

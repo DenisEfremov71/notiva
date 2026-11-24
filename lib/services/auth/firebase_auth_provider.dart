@@ -4,7 +4,8 @@ import 'package:notiva/firebase_options.dart';
 import 'package:notiva/services/auth/auth_user.dart';
 import 'package:notiva/services/auth/auth_provider.dart';
 import 'package:notiva/services/auth/auth_exceptions.dart';
-import 'package:firebase_auth/firebase_auth.dart' show ActionCodeSettings, FirebaseAuth, FirebaseAuthException;
+import 'package:firebase_auth/firebase_auth.dart'
+    show ActionCodeSettings, EmailAuthProvider, FirebaseAuth, FirebaseAuthException;
 
 class FirebaseAuthProvider implements AuthProvider {
   @override
@@ -123,6 +124,53 @@ class FirebaseAuthProvider implements AuthProvider {
         case 'invalid-email':
           throw InvalidEmailAuthException();
         default:
+          throw GenericAuthException();
+      }
+    } catch (_) {
+      throw GenericAuthException();
+    }
+  }
+
+  @override
+  Future<void> reauthenticate({required String password}) async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw UserNotLoggedInAuthException();
+    }
+    try {
+      final credential = EmailAuthProvider.credential(
+        email: user.email!,
+        password: password,
+      );
+      await user.reauthenticateWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'invalid-credential':
+        case 'wrong-password':
+          throw InvalidCredentialAuthException();
+        default:
+          debugPrint('reauthenticate failed: ${e.code} ${e.message}');
+          throw GenericAuthException();
+      }
+    } catch (_) {
+      throw GenericAuthException();
+    }
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      throw UserNotLoggedInAuthException();
+    }
+    try {
+      await user.delete();
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'requires-recent-login':
+          throw RequiresRecentLoginAuthException();
+        default:
+          debugPrint('deleteAccount failed: ${e.code} ${e.message}');
           throw GenericAuthException();
       }
     } catch (_) {

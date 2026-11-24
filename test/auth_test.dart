@@ -68,6 +68,44 @@ void main() {
     });
   });
 
+  group('Delete account', () {
+    final provider = MockAuthProvider();
+
+    test('Cannot reauthenticate or delete account if not initialized', () async {
+      await expectLater(
+        provider.reauthenticate(password: 'pass1234'),
+        throwsA(const TypeMatcher<NotInitializedException>()),
+      );
+      await expectLater(
+        provider.deleteAccount(),
+        throwsA(const TypeMatcher<NotInitializedException>()),
+      );
+    });
+
+    test('Cannot reauthenticate without a logged in user', () async {
+      await provider.initialize();
+      await expectLater(
+        provider.reauthenticate(password: 'pass1234'),
+        throwsA(const TypeMatcher<UserNotFoundAuthException>()),
+      );
+    });
+
+    test('Reauthenticate should fail with a wrong password', () async {
+      await provider.logIn(email: 'testuser@example.com', password: 'pass1234');
+      await expectLater(
+        provider.reauthenticate(password: 'foobar'),
+        throwsA(const TypeMatcher<InvalidCredentialAuthException>()),
+      );
+      expect(provider.currentUser, isNotNull);
+    });
+
+    test('Deleting the account should clear the current user', () async {
+      await provider.reauthenticate(password: 'pass1234');
+      await provider.deleteAccount();
+      expect(provider.currentUser, null);
+    });
+  });
+
   test('Cannot send password reset if not initialized', () async {
     final uninitializedProvider = MockAuthProvider();
     await expectLater(
@@ -148,5 +186,19 @@ class MockAuthProvider implements AuthProvider {
     if (!isInitialized) throw NotInitializedException();
     if (!toEmail.contains('@')) throw InvalidEmailAuthException();
     await Future.delayed(const Duration(milliseconds: 100));
+  }
+
+  @override
+  Future<void> reauthenticate({required String password}) async {
+    if (!isInitialized) throw NotInitializedException();
+    if (_user == null) throw UserNotFoundAuthException();
+    if (password == 'foobar') throw InvalidCredentialAuthException();
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    if (!isInitialized) throw NotInitializedException();
+    if (_user == null) throw UserNotFoundAuthException();
+    _user = null;
   }
 }

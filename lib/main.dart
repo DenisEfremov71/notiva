@@ -6,6 +6,7 @@ import 'package:notiva/services/auth/bloc/auth_bloc.dart';
 import 'package:notiva/services/auth/bloc/auth_event.dart';
 import 'package:notiva/services/auth/bloc/auth_state.dart';
 import 'package:notiva/services/auth/firebase_auth_provider.dart';
+import 'package:notiva/services/cloud/firebase_cloud_storage.dart';
 import 'package:notiva/views/forgot_password_view.dart';
 import 'package:notiva/views/login_view.dart';
 import 'package:notiva/views/notes/create_update_note_view.dart';
@@ -21,7 +22,10 @@ Future<void> main() async {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.blue)),
       home: BlocProvider<AuthBloc>(
-        create: (context) => AuthBloc(FirebaseAuthProvider()),
+        create: (context) => AuthBloc(
+          FirebaseAuthProvider(),
+          FirebaseCloudStorage(),
+        ),
         child: const HomePage(),
       ),
       routes: {

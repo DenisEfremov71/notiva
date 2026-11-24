@@ -4,13 +4,34 @@ import 'package:notiva/services/cloud/cloud_storage_constants.dart';
 import 'package:notiva/services/cloud/cloud_storage_exceptions.dart';
 
 class FirebaseCloudStorage {
-  final notes = FirebaseFirestore.instance.collection('notes');
+  // Lazy: this singleton is created before Firebase.initializeApp() runs.
+  late final notes = FirebaseFirestore.instance.collection('notes');
 
   Future<void> deleteNote({required String documentId}) async {
     try {
       await notes.doc(documentId).delete();
     } catch (_) {
       throw CouldNotDeleteNoteException();
+    }
+  }
+
+  /// Deletes every note owned by [ownerUserId].
+  Future<void> deleteAllNotes({required String ownerUserId}) async {
+    // Firestore allows at most 500 operations per batch.
+    const batchLimit = 500;
+    try {
+      final snapshot = await notes.where(ownerUserIdFieldName, isEqualTo: ownerUserId).get();
+      final docs = snapshot.docs;
+      for (var start = 0; start < docs.length; start += batchLimit) {
+        final batch = FirebaseFirestore.instance.batch();
+        final end = (start + batchLimit < docs.length) ? start + batchLimit : docs.length;
+        for (final doc in docs.sublist(start, end)) {
+          batch.delete(doc.reference);
+        }
+        await batch.commit();
+      }
+    } catch (_) {
+      throw CouldNotDeleteAllNotesException();
     }
   }
 
