@@ -1,4 +1,5 @@
 import 'package:material_ui/material_ui.dart';
+import 'package:notiva/extensions/buildcontext/loc.dart';
 import 'package:notiva/utilities/dialogs/generic_dialog.dart';
 
 Future<void> showErrorDialog(
@@ -7,8 +8,8 @@ Future<void> showErrorDialog(
 ) {
   return showGenericDialog<void>(
     context: context,
-    title: 'An error occurred',
+    title: context.loc.generic_error_prompt,
     content: text,
-    optionsBuilder: () => {'OK': null},
+    optionsBuilder: () => {context.loc.ok: null},
   );
 }

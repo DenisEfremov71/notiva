@@ -13,6 +13,7 @@
   "ignorePaths": [
     "build/**",
     ".dart_tool/**",
-    "pubspec.lock"
+    "pubspec.lock",
+    "lib/l10n/*_sv.arb"
   ]
 }

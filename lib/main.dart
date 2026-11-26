@@ -13,14 +13,25 @@ import 'package:notiva/views/notes/create_update_note_view.dart';
 import 'package:notiva/views/notes/notes_view.dart';
 import 'package:notiva/views/register_view.dart';
 import 'package:notiva/views/verify_email_view.dart';
+import 'package:notiva/l10n/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     MaterialApp(
+      supportedLocales: AppLocalizations.supportedLocales,
+      // Don't use AppLocalizations.localizationsDelegates: it pulls in
+      // flutter_localizations' GlobalMaterialLocalizations, which targets
+      // package:flutter/material.dart, not package:material_ui.
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        ...GlobalMaterialLocalizations.delegates,
+      ],
       title: 'Notiva',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.blue)),
+      theme: ThemeData(
+        colorScheme: .fromSeed(seedColor: Colors.blue),
+      ),
       home: BlocProvider<AuthBloc>(
         create: (context) => AuthBloc(
           FirebaseAuthProvider(),

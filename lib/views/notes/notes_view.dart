@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:notiva/constants/routes.dart';
 import 'package:notiva/enums/menu_action.dart';
+import 'package:notiva/extensions/buildcontext/loc.dart';
 import 'package:notiva/services/auth/auth_exceptions.dart';
 import 'package:notiva/services/auth/auth_service.dart';
 import 'package:notiva/services/auth/bloc/auth_bloc.dart';
@@ -14,6 +15,10 @@ import 'package:notiva/utilities/dialogs/delete_account_dialog.dart';
 import 'package:notiva/utilities/dialogs/error_dialog.dart';
 import 'package:notiva/utilities/dialogs/logout_dialog.dart';
 import 'package:notiva/views/notes/notes_list_view.dart';
+
+extension Count<T extends Iterable> on Stream<T> {
+  Stream<int> get getLength => map((event) => event.length);
+}
 
 class NotesView extends StatefulWidget {
   const new({super.key});
@@ -65,7 +70,22 @@ class _NotesViewState extends State<NotesView> {
           backgroundColor: Colors.blue,
           foregroundColor: Colors.white,
           centerTitle: false,
-          title: const Text('Your Notes'),
+          title: StreamBuilder(
+            stream: _notesService.allNotes(ownerUserId: _userId).getLength,
+            builder:
+                (
+                  context,
+                  AsyncSnapshot<int> snapshot,
+                ) {
+                  if (snapshot.hasData) {
+                    final noteCount = snapshot.data ?? 0;
+                    final text = context.loc.notes_title(noteCount);
+                    return Text(text);
+                  } else {
+                    return const Text('');
+                  }
+                },
+          ),
           actions: [
             IconButton(
               onPressed: () {
@@ -95,14 +115,14 @@ class _NotesViewState extends State<NotesView> {
                 }
               },
               itemBuilder: (context) {
-                return const [
+                return [
                   PopupMenuItem<MenuAction>(
                     value: MenuAction.logout,
-                    child: Text('Log out'),
+                    child: Text(context.loc.logout_button),
                   ),
                   PopupMenuItem<MenuAction>(
                     value: MenuAction.deleteAccount,
-                    child: Text('Delete account'),
+                    child: Text(context.loc.delete_account),
                   ),
                 ];
               },

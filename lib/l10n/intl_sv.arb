@@ -1,0 +1,62 @@
+{
+    "@@locale": "sv",
+    "logout_button": "Logga ut",
+    "note": "Anteckning",
+    "cancel": "Avbryt",
+    "yes": "Ja",
+    "delete": "Radera",
+    "delete_account": "Ta bort konto",
+    "sharing": "Delning",
+    "ok": "OK",
+    "login": "Logga in",
+    "verify_email": "Verifiera",
+    "register": "Registrera",
+    "restart": "Börja om",
+
+    "start_typing_your_note": "Skriv din anteckning här",
+    "delete_note_prompt": "Är du säker på att du vill radera den här anteckningen?",
+    "cannot_share_empty_note_prompt": "Kan inte dela en tom anteckning!",
+    "generic_error_prompt": "Ett fel har inträffat",
+    "logout_dialog_prompt": "Är du säker på att du vill logga ut?",
+
+    "password_reset": "Nollställ ditt lösenord",
+    "password_reset_dialog_prompt": "Vi har nu skickat ett mejl till dig. Mejlet innehåller instruktioner om hur du kan nollställa ditt lösenord!",
+
+    "login_error_cannot_find_user": "Kunde inte hitta en användare med de angivna uppgifterna!",
+    "login_error_wrong_credentials": "Fel inloggningsuppgifter!",
+    "login_error_auth_error": "Ett autentiseringsfel har inträffat!",
+
+    "login_view_prompt": "Logga in för att kunna se dina anteckningar!",
+
+    "login_view_forgot_password": "Glömt lösenord?",
+    "login_view_not_registered_yet": "Inte registrerad än? Tryck här!",
+
+    "email_text_field_placeholder": "Skriv din mejladress här",
+    "password_text_field_placeholder": "Skriv ditt lösenord här",
+
+    "forgot_password": "Glömt lösenord",
+    "forgot_password_view_generic_error": "Vi kunde inte hantera din begäran. Var vänlig och skriv dina inloggningsuppgifter och prova igen!",
+    "forgot_password_view_prompt": "Om du har glömt ditt lösenord, mata in din mejladress så kan vi skicka ett mejl till dig där du kan nollställa ditt lösenord!",
+    "forgot_password_view_send_me_link": "Skicka mejlet",
+    "forgot_password_view_back_to_login": "Tillbaka till inloggningsskärmen",
+
+    "register_error_weak_password": "Ditt valda lösenord är inte säkert nog. Var vänlig och välj ett annat lösenord!",
+    "register_error_email_already_in_use": "Mejladressen som du angav är redan tagen. Var vänlig och välj en annan mejladress!",
+    "register_error_generic": "Kunde tyvärr inte hantera din begäran. Var vänlig försök igen senare.",
+    "register_error_invalid_email": "Din valda mejladress verkar inte vara giltig. Var vänlig försök med en annan mejladress.",
+    "register_view_prompt": "Mata in din mejladress och ditt lösenord för att se dina anteckningar!",
+    "register_view_already_registered": "Redan registrerad? Logga in här!",
+
+    "verify_email_view_prompt": "Vi har skickat ett mejl till din mejladress. Du behöver trycka på länken i mejlet för att verifiera din mejladress. Om du inte redan har fått mejlet efter en stund, tryck på knappen nedan för att skicka ett nytt mejl!",
+    "verify_email_send_email_verification": "Skicka verifieringsmejlet igen",
+
+    "notes_title": "{count, plural, =0{Inga anteckningar än} =1{1 anteckning} other{{count} anteckningar}}",
+    "@notes_title": {
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "3"
+            }
+        }
+    }
+}

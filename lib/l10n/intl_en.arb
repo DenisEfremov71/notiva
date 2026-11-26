@@ -1,0 +1,103 @@
+{
+    "@@locale": "en",
+    "logout_button": "Log out",
+    "@logout_button": { "description": "Label for the log out menu item/button" },
+    "note": "Note",
+    "@note": { "description": "Title for a single note screen" },
+    "cancel": "Cancel",
+    "@cancel": { "description": "Generic cancel button label" },
+    "yes": "Yes",
+    "@yes": { "description": "Generic confirmation button label" },
+    "delete": "Delete",
+    "@delete": { "description": "Title of the delete note dialog" },
+    "delete_account": "Delete account",
+    "@delete_account": { "description": "Label for the delete account menu item/button" },
+    "sharing": "Sharing",
+    "@sharing": { "description": "Title of the sharing dialog" },
+    "ok": "OK",
+    "@ok": { "description": "Generic OK button label" },
+    "login": "Login",
+    "@login": { "description": "Login button label and login screen title" },
+    "verify_email": "Verify email",
+    "@verify_email": { "description": "Title of the email verification screen" },
+    "register": "Register",
+    "@register": { "description": "Register button label and register screen title" },
+    "restart": "Restart",
+    "@restart": { "description": "Button label to restart the registration/verification flow" },
+
+    "start_typing_your_note": "Start typing your note",
+    "@start_typing_your_note": { "description": "Placeholder text in the note editor" },
+    "delete_note_prompt": "Are you sure you want to delete this note?",
+    "@delete_note_prompt": { "description": "Confirmation message in the delete note dialog" },
+    "cannot_share_empty_note_prompt": "Cannot share an empty note!",
+    "@cannot_share_empty_note_prompt": { "description": "Shown when the user tries to share an empty note" },
+    "generic_error_prompt": "An error occurred",
+    "@generic_error_prompt": { "description": "Title of the generic error dialog" },
+    "logout_dialog_prompt": "Are you sure you want to log out?",
+    "@logout_dialog_prompt": { "description": "Confirmation message in the log out dialog" },
+
+    "password_reset": "Password reset",
+    "@password_reset": { "description": "Title of the password reset confirmation dialog" },
+    "password_reset_dialog_prompt": "We have now sent you a password reset link. Please check your email for more information.",
+    "@password_reset_dialog_prompt": { "description": "Message shown after a password reset email was sent" },
+
+    "login_error_cannot_find_user": "Cannot find a user with the entered credentials!",
+    "@login_error_cannot_find_user": { "description": "Login error when no user matches the entered email" },
+    "login_error_wrong_credentials": "Wrong credentials",
+    "@login_error_wrong_credentials": { "description": "Login error when the password is wrong" },
+    "login_error_auth_error": "Authentication error",
+    "@login_error_auth_error": { "description": "Generic login authentication error" },
+
+    "login_view_prompt": "Please log in to your account in order to interact with and create notes!",
+    "@login_view_prompt": { "description": "Introductory text on the login screen" },
+
+    "login_view_forgot_password": "I forgot my password",
+    "@login_view_forgot_password": { "description": "Button on the login screen that opens the forgot password screen" },
+    "login_view_not_registered_yet": "Not registered yet? Register here!",
+    "@login_view_not_registered_yet": { "description": "Button on the login screen that opens the register screen" },
+
+    "email_text_field_placeholder": "Enter your email here",
+    "@email_text_field_placeholder": { "description": "Hint text for the email input field" },
+    "password_text_field_placeholder": "Enter your password here",
+    "@password_text_field_placeholder": { "description": "Hint text for the password input field" },
+
+    "forgot_password": "Forgot Password",
+    "@forgot_password": { "description": "Title of the forgot password screen" },
+    "forgot_password_view_generic_error": "We could not process your request. Please make sure that you are a registered user, or if not, register a user now by going back one step.",
+    "@forgot_password_view_generic_error": { "description": "Error shown when the password reset request fails" },
+    "forgot_password_view_prompt": "If you forgot your password, simply enter your email and we will send you a password reset link.",
+    "@forgot_password_view_prompt": { "description": "Introductory text on the forgot password screen" },
+    "forgot_password_view_send_me_link": "Send me password reset link",
+    "@forgot_password_view_send_me_link": { "description": "Button that sends a password reset email" },
+    "forgot_password_view_back_to_login": "Back to login page",
+    "@forgot_password_view_back_to_login": { "description": "Button that returns to the login screen" },
+
+    "register_error_weak_password": "This password is not secure enough. Please choose another password!",
+    "@register_error_weak_password": { "description": "Registration error when the password is too weak" },
+    "register_error_email_already_in_use": "This email is already registered to another user. Please choose another email!",
+    "@register_error_email_already_in_use": { "description": "Registration error when the email is already in use" },
+    "register_error_generic": "Failed to register. Please try again later!",
+    "@register_error_generic": { "description": "Generic registration error" },
+    "register_error_invalid_email": "The email address you entered appears to be invalid. Please try another email address!",
+    "@register_error_invalid_email": { "description": "Registration error when the email address is invalid" },
+    "register_view_prompt": "Enter your email and password to see your notes!",
+    "@register_view_prompt": { "description": "Introductory text on the register screen" },
+    "register_view_already_registered": "Already registered? Login here!",
+    "@register_view_already_registered": { "description": "Button on the register screen that opens the login screen" },
+
+    "verify_email_view_prompt": "We've sent you an email verification. Please open it to verify your account. If you haven't received a verification email yet, press the button below!",
+    "@verify_email_view_prompt": { "description": "Explanatory text on the email verification screen" },
+    "verify_email_send_email_verification": "Send email verification",
+    "@verify_email_send_email_verification": { "description": "Button that sends the verification email again" },
+
+    "notes_title": "{count, plural, =0{No notes yet} =1{1 note} other{{count} notes}}",
+    "@notes_title": {
+        "description": "Title of the notes list screen showing the number of notes",
+        "placeholders": {
+            "count": {
+                "type": "int",
+                "example": "3"
+            }
+        }
+    }
+}
